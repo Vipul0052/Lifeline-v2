@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 export const metadata: Metadata = {
   title: 'Lifeline IoT Emergency System',
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        {children}
+        <SafeAreaProvider>
+          {children}
+        </SafeAreaProvider>
       </body>
     </html>
   )
