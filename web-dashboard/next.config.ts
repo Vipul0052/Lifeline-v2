@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   experimental: {
     appDir: true,
   },
+  transpilePackages: ['shared'],
 }
 
 export default nextConfig

@@ -1,10 +1,10 @@
 ﻿// Shared types and constants for both mobile app and web dashboard
 
-export interface User {
+export interface UserProfile {
   id: string;
-  name: string;
-  email: string;
-  emergencyContact?: string;
+  name?: string;
+  phone?: string;
+  email?: string;
 }
 
 export interface Device {
