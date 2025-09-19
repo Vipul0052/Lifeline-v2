@@ -14,22 +14,36 @@ import GeoLocatorScreen from './src/components/GeoLocatorScreen';
 import IntelligentMapScreen from './src/components/IntelligentMapScreen';
 import TrekCodeScreen from './src/components/TrekCodeScreen';
 import DeviceStatusScreen from './src/components/DeviceStatusScreen';
+import LoginScreen from './src/components/auth/LoginScreen';
+import SignupScreen from './src/components/auth/SignupScreen';
+import { getUser, signOut } from 'shared/authService';
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const [authed, setAuthed] = useState<boolean | null>(null);
+  const [showSignup, setShowSignup] = useState(false);
 
   useEffect(() => {
-    // Simulate system initialization
-    const timer = setTimeout(() => {
+    (async () => {
+      // Simulate splash and check auth
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      const user = await getUser();
+      setAuthed(!!user);
       setIsLoading(false);
-    }, 3000);
-    return () => clearTimeout(timer);
+    })();
   }, []);
 
   if (isLoading) {
     return <SplashScreen />;
+  }
+
+  if (authed === false) {
+    if (showSignup) {
+      return <SignupScreen onSwitchToLogin={() => setShowSignup(false)} />;
+    }
+    return <LoginScreen onSuccess={() => setAuthed(true)} onSwitchToSignup={() => setShowSignup(true)} />;
   }
 
   return (
