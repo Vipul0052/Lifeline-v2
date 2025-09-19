@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "Lifeline IoT",
+    "slug": "lifeline-iot",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1A1A1A"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lifelineiot.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1A1A1A"
+      },
+      "package": "com.lifelineiot.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Allow $(PRODUCT_NAME) to access motion and fitness data."
+        }
+      ]
+    ]
+  }
+}

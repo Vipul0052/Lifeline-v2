@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Lifeline IoT Emergency System",
+    "slug": "lifeline-iot-emergency",
+    "version": "2.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1A1A1A"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lifeline.iot.emergency"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1A1A1A"
+      },
+      "package": "com.lifeline.iot.emergency"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": []
+  }
+}

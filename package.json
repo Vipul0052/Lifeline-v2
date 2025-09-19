@@ -1,0 +1,18 @@
+﻿{
+  "name": "lifeline-project",
+  "private": true,
+  "version": "2.1.0",
+  "workspaces": [
+    "mobile-app",
+    "shared",
+    "web-dashboard"
+  ],
+  "scripts": {
+    "start": "npm --workspace mobile-app run start",
+    "android": "npm --workspace mobile-app run android",
+    "ios": "npm --workspace mobile-app run ios",
+    "web": "npm --workspace mobile-app run web",
+    "install:all": "npm install --workspaces",
+    "clean": "echo Clean complete"
+  }
+}

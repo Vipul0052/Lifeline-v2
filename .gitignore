@@ -1,0 +1,44 @@
+﻿# Node / Expo / Next.js
+node_modules/
+.npm/
+.npmrc
+npm-debug.log*
+package-lock.json
+
+# Expo / Metro / bundlers
+.expo/
+.expo-shared/
+.expo-web/
+dist/
+web-build/
+.expo/*
+.expo/**
+
+# Build outputs
+.next/
+.out/
+.cache/
+build/
+coverage/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Logs
+logs
+*.log
+lerna-debug.log*
+
+# Misc
+*.local
+.sass-cache
+.parcel-cache
+.turbo/
