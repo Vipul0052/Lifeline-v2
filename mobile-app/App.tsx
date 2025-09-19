@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Import screen components
 import SplashScreen from './src/components/SplashScreen';
@@ -32,8 +33,9 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <StatusBar style="light" backgroundColor="#1A1A1A" />
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <StatusBar style="light" backgroundColor="#1A1A1A" />
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -128,6 +130,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
       </Tab.Navigator>
-    </NavigationContainer>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
