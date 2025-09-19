@@ -6,7 +6,6 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../styles/colors';
 
@@ -88,7 +87,7 @@ const SplashScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Circuit Board Background Pattern */}
       <View style={styles.backgroundPattern}>
         {/* Simple grid pattern using View components */}
@@ -164,7 +163,7 @@ const SplashScreen = () => {
         <Text style={styles.footerText}>Emergency Response System</Text>
         <Text style={styles.footerCopyright}>© 2025 Lifeline IoT Technologies</Text>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
