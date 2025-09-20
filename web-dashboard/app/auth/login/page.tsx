@@ -8,8 +8,8 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Eye, EyeOff, Shield, Mail, Lock, Loader2 } from 'lucide-react'
-import { useAuth } from 'shared/authContext'
-import { validateSignInForm } from 'shared/authUtils'
+import { useAuth } from '@/lib/shared/authContext'
+import { validateSignInForm } from '@/lib/shared/authUtils'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')

@@ -1,6 +1,6 @@
 'use client'
 
-import { useAuth } from 'shared/authContext'
+import { useAuth } from '@/lib/shared/authContext'
 import { Button } from '@/components/ui/button'
 import { LogOut, User } from 'lucide-react'
 

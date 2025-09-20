@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { AuthProvider, useAuth } from 'shared/authContext'
+import { AuthProvider, useAuth } from '@/lib/shared/authContext'
 import { Shield, Loader2 } from 'lucide-react'
 
 interface AuthWrapperProps {

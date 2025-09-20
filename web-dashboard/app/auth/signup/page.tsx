@@ -9,8 +9,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
 import { Eye, EyeOff, Shield, Mail, Lock, User, CheckCircle, Loader2 } from 'lucide-react'
-import { useAuth } from 'shared/authContext'
-import { validateSignUpForm, validatePassword } from 'shared/authUtils'
+import { useAuth } from '@/lib/shared/authContext'
+import { validateSignUpForm, validatePassword } from '@/lib/shared/authUtils'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
