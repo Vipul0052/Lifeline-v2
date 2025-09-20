@@ -1,4 +1,10 @@
-﻿// Shared types and constants for both mobile app and web dashboard
+// Shared types and constants for both mobile app and web dashboard
+
+// Export authentication utilities
+export * from './authService'
+export * from './authContext'
+export * from './authUtils'
+export * from './supabase'
 
 export interface UserProfile {
   id: string;
