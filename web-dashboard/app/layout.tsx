@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { AuthProvider } from '../../shared'
+import { AuthProvider } from '../shared'
 
 export const metadata: Metadata = {
   title: 'Lifeline IoT Emergency System',

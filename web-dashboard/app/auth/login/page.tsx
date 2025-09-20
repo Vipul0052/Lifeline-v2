@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth, validateSignInForm } from '../../../../shared';
+import { useAuth, validateSignInForm } from '../../../shared';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');

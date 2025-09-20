@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth, validateSignUpForm } from '../../../../shared';
+import { useAuth, validateSignUpForm } from '../../../shared';
 
 export default function SignupPage() {
   const [name, setName] = useState('');

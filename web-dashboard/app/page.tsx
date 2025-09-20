@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../../../shared';
+import { useAuth } from '../../shared';
 
 export default function Home() {
   const { user, loading } = useAuth();
