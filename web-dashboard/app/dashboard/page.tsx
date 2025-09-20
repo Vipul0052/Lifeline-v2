@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useAuth } from '../../../../shared';
+import { useAuth } from '../../../shared';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
