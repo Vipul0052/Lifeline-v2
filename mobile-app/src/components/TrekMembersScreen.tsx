@@ -16,7 +16,7 @@ const TrekMembersScreen = () => {
   const [teamMembers, setTeamMembers] = useState([
     {
       id: 1,
-      name: 'Alex Thompson',
+      name: 'Vishal Yadav',
       role: 'Team Leader',
       status: 'online',
       lastSeen: 'Now',
@@ -28,7 +28,7 @@ const TrekMembersScreen = () => {
     },
     {
       id: 2,
-      name: 'Sarah Chen',
+      name: 'Vivek Saraswat',
       role: 'Navigator',
       status: 'online',
       lastSeen: '2 min ago',
@@ -40,7 +40,7 @@ const TrekMembersScreen = () => {
     },
     {
       id: 3,
-      name: 'Mike Rodriguez',
+      name: 'Vasudev Verma',
       role: 'Safety Officer',
       status: 'offline',
       lastSeen: '15 min ago',
@@ -52,7 +52,7 @@ const TrekMembersScreen = () => {
     },
     {
       id: 4,
-      name: 'Emma Wilson',
+      name: 'Vipul Sharma',
       role: 'Medic',
       status: 'emergency',
       lastSeen: '1 min ago',

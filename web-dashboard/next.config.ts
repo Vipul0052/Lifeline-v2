@@ -1,10 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  experimental: {
-    appDir: true,
-  },
-  transpilePackages: ['shared'],
+  // Configuration for the web dashboard
 }
 
 export default nextConfig

@@ -16,8 +16,8 @@ import { commonStyles } from '../styles/commonStyles';
 
 const ProfileScreen = () => {
   const [userProfile, setUserProfile] = useState({
-    name: 'Alex Thompson',
-    emergencyContact: '+1-555-0123',
+    name: 'Vishal Yadav',
+    emergencyContact: '+91638547154',
     medicalInfo: 'Type 1 Diabetes',
     bloodType: 'O+'
   });
