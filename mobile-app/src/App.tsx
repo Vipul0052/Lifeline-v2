@@ -22,7 +22,11 @@ import IntelligentMapScreen from './components/IntelligentMapScreen';
 import TrekCodeScreen from './components/TrekCodeScreen';
 import DeviceStatusScreen from './components/DeviceStatusScreen';
 
-export default function App() {
+// Import authentication components
+import { AuthProvider } from './contexts/AuthContext';
+import { AuthWrapper } from './components/AuthWrapper';
+
+function MainApp() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('home');
 
@@ -131,5 +135,15 @@ export default function App() {
         </TabsList>
       </Tabs>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AuthWrapper>
+        <MainApp />
+      </AuthWrapper>
+    </AuthProvider>
   );
 }

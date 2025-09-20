@@ -15,10 +15,13 @@ import * as Haptics from 'expo-haptics';
 import { colors } from '../styles/colors';
 import { commonStyles } from '../styles/commonStyles';
 import SliderComponent from '../components/SliderComponent';
+import { useAuth } from '../contexts/AuthContext';
 
 const ProfileScreen = () => {
+  const { user, signOut } = useAuth();
+  
   const [userProfile, setUserProfile] = useState({
-    name: 'Alex Thompson',
+    name: user?.user_metadata?.name || user?.email || 'User',
     emergencyContact: '+1-555-0123',
     medicalInfo: 'Type 1 Diabetes',
     bloodType: 'O+'
@@ -51,6 +54,28 @@ const ProfileScreen = () => {
     Alert.alert('Advanced Settings', 'Advanced configuration options coming soon.');
   };
 
+  const handleSignOut = () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Sign Out', 
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await signOut();
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            } catch (error) {
+              Alert.alert('Error', 'Failed to sign out. Please try again.');
+            }
+          }
+        }
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={commonStyles.safeArea}>
       <ScrollView contentContainerStyle={commonStyles.scrollContainer}>
@@ -60,9 +85,13 @@ const ProfileScreen = () => {
             <Text style={commonStyles.title}>System Configuration</Text>
             <Text style={commonStyles.subtitle}>Device & User Settings</Text>
           </View>
-          <View style={[commonStyles.statusIndicator, { backgroundColor: colors.technical + '33', borderColor: colors.technical }]}>
-            <Text style={[commonStyles.statusText, { color: colors.technical }]}>v2.1.0</Text>
-          </View>
+          <TouchableOpacity
+            style={styles.signOutButton}
+            onPress={handleSignOut}
+          >
+            <Ionicons name="log-out-outline" size={20} color={colors.emergency} />
+            <Text style={styles.signOutText}>Sign Out</Text>
+          </TouchableOpacity>
         </View>
 
         {/* User Profile Section */}
@@ -343,6 +372,22 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     marginTop: 16,
+  },
+  signOutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: colors.emergency,
+    borderRadius: 8,
+    backgroundColor: colors.emergency + '10',
+  },
+  signOutText: {
+    fontSize: 14,
+    color: colors.emergency,
+    fontWeight: '500',
+    marginLeft: 6,
   },
 });
 
