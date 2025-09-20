@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "lifeline-project",
   "private": true,
   "version": "2.1.0",
@@ -14,5 +14,9 @@
     "web": "npm --workspace mobile-app run web",
     "install:all": "npm install --workspaces",
     "clean": "echo Clean complete"
+  },
+  "overrides": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
   }
 }

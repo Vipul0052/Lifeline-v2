@@ -4,13 +4,14 @@
     "slug": "lifeline-iot-emergency",
     "version": "2.1.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    // using Expo defaults to avoid Jimp MIME error for now
+    // "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#1A1A1A"
-    },
+    // "splash": {
+    //   "image": "./assets/splash.png",
+    //   "resizeMode": "contain",
+    //   "backgroundColor": "#1A1A1A"
+    // },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -19,15 +20,15 @@
       "bundleIdentifier": "com.lifeline.iot.emergency"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#1A1A1A"
-      },
+      // "adaptiveIcon": {
+      //   "foregroundImage": "./assets/adaptive-icon.png",
+      //   "backgroundColor": "#1A1A1A"
+      // },
       "package": "com.lifeline.iot.emergency"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
+    // "web": {
+    //   "favicon": "./assets/favicon.png"
+    // },
     "plugins": []
   }
 }
