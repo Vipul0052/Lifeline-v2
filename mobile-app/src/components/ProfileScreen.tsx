@@ -13,10 +13,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../styles/colors';
 import { commonStyles } from '../styles/commonStyles';
+import { useAuth } from '../../../shared';
 
 const ProfileScreen = () => {
+  const { user, signOut } = useAuth();
+  
   const [userProfile, setUserProfile] = useState({
-    name: 'Alex Thompson',
+    name: user?.user_metadata?.name || 'Alex Thompson',
     emergencyContact: '+1-555-0123',
     medicalInfo: 'Type 1 Diabetes',
     bloodType: 'O+'
@@ -37,6 +40,26 @@ const ProfileScreen = () => {
     vibration: true,
     offlineMaps: true
   });
+
+  const handleSignOut = async () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: async () => {
+            const { error } = await signOut();
+            if (error) {
+              Alert.alert('Error', 'Failed to sign out. Please try again.');
+            }
+          },
+        },
+      ]
+    );
+  };
 
   const Card = ({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) => (
     <View style={styles.card}>
@@ -321,6 +344,12 @@ const ProfileScreen = () => {
             </Text>
           </TouchableOpacity>
         </View>
+
+        {/* Sign Out Button */}
+        <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
+          <Ionicons name="log-out-outline" size={20} color="#FF3B30" />
+          <Text style={styles.signOutText}>Sign Out</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -524,6 +553,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  signOutButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#FF3B30',
+    borderRadius: 8,
+    height: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 32,
+  },
+  signOutText: {
+    color: '#FF3B30',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
   },
 });
 

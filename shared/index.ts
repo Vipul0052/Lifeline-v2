@@ -1,4 +1,4 @@
-﻿// Shared types and constants for both mobile app and web dashboard
+// Shared types and constants for both mobile app and web dashboard
 
 export interface UserProfile {
   id: string;
@@ -6,6 +6,33 @@ export interface UserProfile {
   phone?: string;
   email?: string;
 }
+
+// Authentication exports
+export { AuthProvider, useAuth } from './authContext';
+export { 
+  validateEmail, 
+  validatePassword, 
+  validateName, 
+  validateConfirmPassword,
+  validateSignUpForm,
+  validateSignInForm,
+  type ValidationResult 
+} from './authValidation';
+export { 
+  signUp, 
+  signIn, 
+  signOut, 
+  getUser, 
+  resetPassword, 
+  updatePassword, 
+  type AuthResponse 
+} from './authService';
+export { 
+  loginRateLimiter, 
+  signupRateLimiter, 
+  passwordResetRateLimiter, 
+  getClientIdentifier 
+} from './rateLimiter';
 
 export interface Device {
   id: string;

@@ -13,6 +13,7 @@ import GeoLocatorScreen from './src/components/GeoLocatorScreen';
 import IntelligentMapScreen from './src/components/IntelligentMapScreen';
 import TrekCodeScreen from './src/components/TrekCodeScreen';
 import DeviceStatusScreen from './src/components/DeviceStatusScreen';
+import AuthWrapper from './src/components/AuthWrapper';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,9 +33,10 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <StatusBar style="light" backgroundColor="#1A1A1A" />
-      <Tab.Navigator
+    <AuthWrapper>
+      <NavigationContainer>
+        <StatusBar style="light" backgroundColor="#1A1A1A" />
+        <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName: keyof typeof Ionicons.glyphMap;
@@ -128,6 +130,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
       </Tab.Navigator>
-    </NavigationContainer>
+      </NavigationContainer>
+    </AuthWrapper>
   );
 }
