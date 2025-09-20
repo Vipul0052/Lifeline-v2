@@ -1,17 +1,38 @@
 // Shared types and constants for both mobile app and web dashboard
 
-// Export authentication utilities
-export * from './authService'
-export * from './authContext'
-export * from './authUtils'
-export * from './supabase'
-
 export interface UserProfile {
   id: string;
   name?: string;
   phone?: string;
   email?: string;
 }
+
+// Authentication exports
+export { AuthProvider, useAuth } from './authContext';
+export { 
+  validateEmail, 
+  validatePassword, 
+  validateName, 
+  validateConfirmPassword,
+  validateSignUpForm,
+  validateSignInForm,
+  type ValidationResult 
+} from './authValidation';
+export { 
+  signUp, 
+  signIn, 
+  signOut, 
+  getUser, 
+  resetPassword, 
+  updatePassword, 
+  type AuthResponse 
+} from './authService';
+export { 
+  loginRateLimiter, 
+  signupRateLimiter, 
+  passwordResetRateLimiter, 
+  getClientIdentifier 
+} from './rateLimiter';
 
 export interface Device {
   id: string;

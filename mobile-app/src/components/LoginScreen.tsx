@@ -1,161 +1,290 @@
-import React, { useState } from 'react'
-import { Button } from './ui/button'
-import { Input } from './ui/input'
-import { Label } from './ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { Alert, AlertDescription } from './ui/alert'
-import { Eye, EyeOff, Shield, Mail, Lock } from 'lucide-react'
-import { useAuth } from 'shared/authContext'
-import { validateSignInForm } from 'shared/authUtils'
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useAuth, validateSignInForm } from '../../../shared';
 
 interface LoginScreenProps {
-  onSwitchToSignup: () => void
+  onNavigateToSignUp: () => void;
+  onLoginSuccess: () => void;
 }
 
-export default function LoginScreen({ onSwitchToSignup }: LoginScreenProps) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({})
-  const [authError, setAuthError] = useState('')
-  const { signIn, loading } = useAuth()
+const LoginScreen: React.FC<LoginScreenProps> = ({ onNavigateToSignUp, onLoginSuccess }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<string[]>([]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setAuthError('')
-    
+  const { signIn } = useAuth();
+
+  const handleLogin = async () => {
+    setErrors([]);
+    setLoading(true);
+
     // Validate form
-    const validationErrors = validateSignInForm(email, password)
-    setErrors(validationErrors)
-    
-    if (Object.keys(validationErrors).length > 0) {
-      return
+    const validation = validateSignInForm({ email, password });
+    if (!validation.isValid) {
+      setErrors(validation.errors);
+      setLoading(false);
+      return;
     }
 
     try {
-      const result = await signIn(email, password)
-      if (result.error) {
-        setAuthError(result.error)
+      const { error } = await signIn(email.trim().toLowerCase(), password);
+      
+      if (error) {
+        setErrors([error]);
+      } else {
+        onLoginSuccess();
       }
     } catch (error) {
-      setAuthError('An unexpected error occurred. Please try again.')
+      setErrors(['An unexpected error occurred. Please try again.']);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  const handleInputChange = (field: 'email' | 'password', value: string) => {
-    if (field === 'email') {
-      setEmail(value)
-    } else {
-      setPassword(value)
-    }
-    
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }))
-    }
-    if (authError) {
-      setAuthError('')
-    }
-  }
+  const handleForgotPassword = () => {
+    Alert.alert(
+      'Reset Password',
+      'Please contact support to reset your password.',
+      [{ text: 'OK' }]
+    );
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="p-3 bg-blue-100 rounded-full">
-              <Shield className="h-8 w-8 text-blue-600" />
-            </div>
-          </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">
-            Welcome Back
-          </CardTitle>
-          <CardDescription className="text-gray-600">
-            Sign in to your Lifeline Emergency account
-          </CardDescription>
-        </CardHeader>
-        
-        <CardContent className="space-y-6">
-          {authError && (
-            <Alert variant="destructive">
-              <AlertDescription>{authError}</AlertDescription>
-            </Alert>
+    <KeyboardAvoidingView 
+      style={styles.container} 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.header}>
+          <View style={styles.logoContainer}>
+            <Ionicons name="shield" size={60} color="#007AFF" />
+          </View>
+          <Text style={styles.title}>Welcome Back</Text>
+          <Text style={styles.subtitle}>Sign in to your Lifeline account</Text>
+        </View>
+
+        <View style={styles.form}>
+          {errors.length > 0 && (
+            <View style={styles.errorContainer}>
+              {errors.map((error, index) => (
+                <Text key={index} style={styles.errorText}>
+                  • {error}
+                </Text>
+              ))}
+            </View>
           )}
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-                Email Address
-              </Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  className={`pl-10 ${errors.email ? 'border-red-500' : ''}`}
-                  disabled={loading}
-                />
-              </div>
-              {errors.email && (
-                <p className="text-sm text-red-500">{errors.email}</p>
-              )}
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-                Password
-              </Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => handleInputChange('password', e.target.value)}
-                  className={`pl-10 pr-10 ${errors.password ? 'border-red-500' : ''}`}
-                  disabled={loading}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  disabled={loading}
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="text-sm text-red-500">{errors.password}</p>
-              )}
-            </div>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email</Text>
+            <View style={styles.inputWrapper}>
+              <Ionicons name="mail-outline" size={20} color="#8E8E93" style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your email"
+                placeholderTextColor="#8E8E93"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                editable={!loading}
+              />
+            </View>
+          </View>
 
-            <Button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-              disabled={loading}
-            >
-              {loading ? 'Signing In...' : 'Sign In'}
-            </Button>
-          </form>
-
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <button
-                onClick={onSwitchToSignup}
-                className="text-blue-600 hover:text-blue-700 font-medium"
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Password</Text>
+            <View style={styles.inputWrapper}>
+              <Ionicons name="lock-closed-outline" size={20} color="#8E8E93" style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your password"
+                placeholderTextColor="#8E8E93"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                autoCapitalize="none"
+                autoCorrect={false}
+                editable={!loading}
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setShowPassword(!showPassword)}
                 disabled={loading}
               >
-                Sign up here
-              </button>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
+                <Ionicons 
+                  name={showPassword ? "eye-outline" : "eye-off-outline"} 
+                  size={20} 
+                  color="#8E8E93" 
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={styles.forgotPassword}
+            onPress={handleForgotPassword}
+            disabled={loading}
+          >
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.loginButton, loading && styles.loginButtonDisabled]}
+            onPress={handleLogin}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#FFFFFF" size="small" />
+            ) : (
+              <Text style={styles.loginButtonText}>Sign In</Text>
+            )}
+          </TouchableOpacity>
+
+          <View style={styles.signUpContainer}>
+            <Text style={styles.signUpText}>Don't have an account? </Text>
+            <TouchableOpacity onPress={onNavigateToSignUp} disabled={loading}>
+              <Text style={styles.signUpLink}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#1A1A1A',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  logoContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#2D2D2D',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#8E8E93',
+    textAlign: 'center',
+  },
+  form: {
+    width: '100%',
+  },
+  errorContainer: {
+    backgroundColor: '#FF3B30',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 20,
+  },
+  errorText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    marginBottom: 8,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#2D2D2D',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#444444',
+    paddingHorizontal: 16,
+    height: 56,
+  },
+  inputIcon: {
+    marginRight: 12,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: '#FFFFFF',
+    height: '100%',
+  },
+  eyeIcon: {
+    padding: 4,
+  },
+  forgotPassword: {
+    alignSelf: 'flex-end',
+    marginBottom: 24,
+  },
+  forgotPasswordText: {
+    color: '#007AFF',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  loginButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 12,
+    height: 56,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  loginButtonDisabled: {
+    backgroundColor: '#444444',
+  },
+  loginButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  signUpContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  signUpText: {
+    color: '#8E8E93',
+    fontSize: 16,
+  },
+  signUpLink: {
+    color: '#007AFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});
+
+export default LoginScreen;

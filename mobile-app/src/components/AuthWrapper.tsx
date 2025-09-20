@@ -1,50 +1,61 @@
-import React, { useState } from 'react'
-import { AuthProvider, useAuth } from 'shared/authContext'
-import LoginScreen from './LoginScreen'
-import SignupScreen from './SignupScreen'
-import { Shield, Loader2 } from 'lucide-react'
+import React, { useState } from 'react';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { AuthProvider, useAuth } from '../../../shared';
+import LoginScreen from './LoginScreen';
+import SignupScreen from './SignupScreen';
 
 interface AuthWrapperProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
-function AuthContent({ children }: AuthWrapperProps) {
-  const { isAuthenticated, loading } = useAuth()
-  const [isSignup, setIsSignup] = useState(false)
+const AuthContent: React.FC<AuthWrapperProps> = ({ children }) => {
+  const { user, loading } = useAuth();
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="p-4 bg-blue-100 rounded-full">
-              <Shield className="h-8 w-8 text-blue-600" />
-            </div>
-          </div>
-          <div className="flex items-center justify-center space-x-2">
-            <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
-            <span className="text-gray-600">Loading...</span>
-          </div>
-        </div>
-      </div>
-    )
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
   }
 
-  if (!isAuthenticated) {
-    return isSignup ? (
-      <SignupScreen onSwitchToLogin={() => setIsSignup(false)} />
-    ) : (
-      <LoginScreen onSwitchToSignup={() => setIsSignup(true)} />
-    )
+  if (!user) {
+    if (authMode === 'login') {
+      return (
+        <LoginScreen
+          onNavigateToSignUp={() => setAuthMode('signup')}
+          onLoginSuccess={() => {}} // Will be handled by auth state change
+        />
+      );
+    } else {
+      return (
+        <SignupScreen
+          onNavigateToLogin={() => setAuthMode('login')}
+          onSignupSuccess={() => setAuthMode('login')}
+        />
+      );
+    }
   }
 
-  return <>{children}</>
-}
+  return <>{children}</>;
+};
 
-export default function AuthWrapper({ children }: AuthWrapperProps) {
+const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
   return (
     <AuthProvider>
       <AuthContent>{children}</AuthContent>
     </AuthProvider>
-  )
-}
+  );
+};
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1A1A1A',
+  },
+});
+
+export default AuthWrapper;

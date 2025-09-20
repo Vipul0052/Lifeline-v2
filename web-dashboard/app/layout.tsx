@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import AuthWrapper from '@/components/AuthWrapper'
+import { AuthProvider } from '../../shared'
 
 export const metadata: Metadata = {
   title: 'Lifeline IoT Emergency System',
@@ -15,9 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <AuthWrapper>
+        <AuthProvider>
           {children}
-        </AuthWrapper>
+        </AuthProvider>
       </body>
     </html>
   )

@@ -1,105 +1,93 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { User } from '@supabase/supabase-js'
-import { getSupabaseClient } from './supabase'
-import { signIn, signUp, signOut, getUser } from './authService'
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { User, Session } from '@supabase/supabase-js';
+import { getSupabaseClient } from './supabase';
 
 interface AuthContextType {
-  user: User | null
-  loading: boolean
-  signIn: (email: string, password: string) => Promise<{ error?: string }>
-  signUp: (email: string, password: string, name?: string) => Promise<{ error?: string }>
-  signOut: () => Promise<{ error?: string }>
-  isAuthenticated: boolean
+  user: User | null;
+  session: Session | null;
+  loading: boolean;
+  signUp: (email: string, password: string, name?: string) => Promise<{ error?: string }>;
+  signIn: (email: string, password: string) => Promise<{ error?: string }>;
+  signOut: () => Promise<{ error?: string }>;
+  resetPassword: (email: string) => Promise<{ error?: string }>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+  const supabase = getSupabaseClient();
 
   useEffect(() => {
     // Get initial session
     const getInitialSession = async () => {
-      try {
-        const userData = await getUser()
-        setUser(userData)
-      } catch (error) {
-        console.error('Error getting initial session:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    };
 
-    getInitialSession()
+    getInitialSession();
 
     // Listen for auth changes
-    const supabase = getSupabaseClient()
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        setUser(session?.user ?? null)
-        setLoading(false)
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
       }
-    )
+    );
 
-    return () => subscription.unsubscribe()
-  }, [])
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
 
-  const handleSignIn = async (email: string, password: string) => {
-    setLoading(true)
-    try {
-      const result = await signIn(email, password)
-      return result
-    } finally {
-      setLoading(false)
-    }
-  }
+  const signUp = async (email: string, password: string, name?: string) => {
+    const { signUp: signUpService } = await import('./authService');
+    return await signUpService(email, password, name);
+  };
 
-  const handleSignUp = async (email: string, password: string, name?: string) => {
-    setLoading(true)
-    try {
-      const result = await signUp(email, password, name)
-      return result
-    } finally {
-      setLoading(false)
-    }
-  }
+  const signIn = async (email: string, password: string) => {
+    const { signIn: signInService } = await import('./authService');
+    return await signInService(email, password);
+  };
 
-  const handleSignOut = async () => {
-    setLoading(true)
-    try {
-      const result = await signOut()
-      setUser(null)
-      return result
-    } finally {
-      setLoading(false)
-    }
-  }
+  const signOut = async () => {
+    const { signOut: signOutService } = await import('./authService');
+    return await signOutService();
+  };
+
+  const resetPassword = async (email: string) => {
+    const { resetPassword: resetPasswordService } = await import('./authService');
+    return await resetPasswordService(email);
+  };
 
   const value: AuthContextType = {
     user,
+    session,
     loading,
-    signIn: handleSignIn,
-    signUp: handleSignUp,
-    signOut: handleSignOut,
-    isAuthenticated: !!user,
-  }
+    signUp,
+    signIn,
+    signOut,
+    resetPassword,
+  };
 
   return (
     <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
-  )
-}
+  );
+};
 
 export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error('useAuth must be used within an AuthProvider');
   }
-  return context
-}
+  return context;
+};
